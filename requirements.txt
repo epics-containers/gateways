@@ -1,0 +1,6 @@
+
+
+# don't use numpy 2.0 yet, pin to latest 1.x version
+numpy==1.26.4
+p4p==4.1.12
+nose2==0.15.1
