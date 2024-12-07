@@ -63,17 +63,17 @@ jobs:
         with:
           platforms: ${{ matrix.platform }}
           target: developer
-          tags: ${{ env.TAG }}:${{ github.ref_name }}
+          tags: ${{ env.TAG }}-developer:${{ github.ref_name }}
           push: true
-  # TODO
-  # - name: Push runtime image
-  #   if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-  #   uses: docker/build-push-action@v6
-  #   with:
-  #     platforms: ${{ matrix.platform }}
-  #     target: runtime
-  #     tags: ${{ env.TAG }}-debug:${{ github.ref_name }}
-  #     push: true
+
+      - name: Push runtime image
+        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+        uses: docker/build-push-action@v6
+        with:
+          platforms: ${{ matrix.platform }}
+          target: runtime
+          tags: ${{ env.TAG }}-runtime:${{ github.ref_name }}
+          push: true
 
   release:
     # Release on tag push
