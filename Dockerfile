@@ -1,24 +1,39 @@
-FROM python:3.11-slim as common
+###### developer stage #######################################################
+FROM ghcr.io/epics-containers/epics-base-developer:7.0.8ec2 AS developer
 
-ENV PATH=/venv/bin:$PATH
+# get ca-gateway and pcas
+RUN git clone --branch R2-1-3-0 --depth 1 -c advice.detachedHead=false \
+      https://github.com/epics-extensions/ca-gateway.git /epics/src/ca-gateway
+RUN git clone --branch v4.13.3 --depth 1 -c advice.detachedHead=false \
+      https://github.com/epics-modules/pcas.git /epics/support/pcas
 
-FROM python:3.11 as install
+# hook up the dependencies
+COPY settings/* /
+RUN ln -s /configure/RELEASE.local /epics/support/pcas/configure && \
+    ln -s /configure/RELEASE.local /epics/src/ca-gateway/configure && \
+# build pcas and ca-gateway
+RUN cd /epics/support/pcas && make -j$(nproc)
+RUN cd /epics/src/ca-gateway && make -j$(nproc)
 
-RUN python -mvenv /venv
-ENV PATH=/venv/bin:$PATH
-
-COPY requirements.txt .
+COPY requirements.txt /
 RUN pip install -r requirements.txt
 
-FROM common as debug
+# install debugging tools
+RUN apt update && \
+    apt install -y \
+    net-tools tcpdump iproute2 iputils-ping vim && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt install -y net-tools tcpdump iproute2 iputils-ping vim
-COPY --from=install /venv /venv
+COPY start.sh get_ioc_ips.py /
+
+
 
 ENTRYPOINT [ "bash" ]
 
-FROM common as runtime
+##### runtime stage ##########################################################
+# FROM ghcr.io/epics-containers/epics-base-developer:7.0.8ec2 as runtime
 
-COPY --from=install /venv /venv
+# COPY --from=developer /venv /venv
+# COPY launch.py /launch.py
 
-ENTRYPOINT [ "bash" ]
+# ENTRYPOINT [ "bash" ]

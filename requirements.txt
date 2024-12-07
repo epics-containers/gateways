@@ -4,3 +4,5 @@
 numpy==1.26.4
 p4p==4.1.12
 nose2==0.15.1
+scapy
+kubernetes

@@ -29,7 +29,6 @@ jobs:
     env:
       TAG: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
     steps:
-
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v3
         with:
@@ -58,23 +57,23 @@ jobs:
         if: ${{ matrix.epics-target == 'linux-x86_64' }}
         run: if [ -f tests/run-tests.sh ]; then tests/run-tests.sh ci_test; fi
 
-      - name: Push runtime image
+      - name: Push developer image
         if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
         uses: docker/build-push-action@v6
         with:
           platforms: ${{ matrix.platform }}
-          target: runtime
+          target: developer
           tags: ${{ env.TAG }}:${{ github.ref_name }}
           push: true
-
-      - name: Push debug image
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-        uses: docker/build-push-action@v6
-        with:
-          platforms: ${{ matrix.platform }}
-          target: dockerizer
-          tags: ${{ env.TAG }}-debug:${{ github.ref_name }}
-          push: true
+  # TODO
+  # - name: Push runtime image
+  #   if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+  #   uses: docker/build-push-action@v6
+  #   with:
+  #     platforms: ${{ matrix.platform }}
+  #     target: runtime
+  #     tags: ${{ env.TAG }}-debug:${{ github.ref_name }}
+  #     push: true
 
   release:
     # Release on tag push

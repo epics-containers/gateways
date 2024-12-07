@@ -1,0 +1,33 @@
+/* pvagw configuration template
+ *
+ * requires replacement of EPICS_PVA_ADDR_LIST and EPICS_PVA_SEVER_PORT
+ *
+ */
+{
+    "version":2,
+    "readOnly":false,
+    "clients":[
+        {
+            "name":"theclient",
+            "provider":"pva",
+            "addrlist":"EPICS_PVA_ADDR_LIST",
+            "autoaddrlist":false,
+            "serverport":5075,
+            "bcastport":5076
+        }
+    ],
+    "servers":[
+        {
+            "name":"theserver",
+            "clients":["theclient"],
+            /* "interface":["127.0.0.1"], */
+            /* "addrlist":"127.255.255.255", */
+            "autoaddrlist":false,
+            "serverport":EPICS_PVA_SEVER_PORT,
+            /* "bcastport":5076, */
+            "statusprefix":"sts:"
+            /* "access":"some.acf", */
+            /* "pvlist":"some.pvlist", */
+        }
+    ]
+}
