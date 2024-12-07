@@ -35,6 +35,11 @@ FROM ghcr.io/epics-containers/epics-base-runtime:7.0.8ec2 as runtime
 COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
 COPY --from=developer /epics/support/pcas /epics/support/pcas
+COPY settings/config /config
 COPY start.sh get_ioc_ips.py /
+RUN apt update && \
+    apt install -y \
+    python3-distutils && \
+    rm -rf /var/lib/apt/lists/*
 
 # ENTRYPOINT [ "bash" ]
