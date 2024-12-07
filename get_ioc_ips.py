@@ -26,7 +26,6 @@ def get_ioc_ips(v1: client.CoreV1Api):
     # get the pods in the namespace
     ret = v1.list_namespaced_pod(current_namespace)
     for pod in ret.items:
-        print(pod.metadata.name, pod.status.pod_ip)
         if "is_ioc" in pod.metadata.labels:
             ips.add(pod.status.pod_ip)
 
