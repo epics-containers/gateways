@@ -13,7 +13,7 @@
             "provider":"pva",
             "addrlist":"PVA_ADDR_LIST",
             "autoaddrlist":false,
-            "serverport":5075
+            "serverport":5075,
             "bcastport":5076
         }
     ],
