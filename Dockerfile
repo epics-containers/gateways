@@ -30,9 +30,11 @@ COPY start.sh get_ioc_ips.py /
 ENTRYPOINT [ "bash" ]
 
 ##### runtime stage ##########################################################
-# FROM ghcr.io/epics-containers/epics-base-developer:7.0.8ec2 as runtime
+FROM ghcr.io/epics-containers/epics-base-runtime:7.0.8ec2 as runtime
 
-# COPY --from=developer /venv /venv
-# COPY launch.py /launch.py
+COPY --from=developer /venv /venv
+COPY --from=developer /epics/ca-gateway /epics/ca-gateway
+COPY --from=developer /epics/support/pcas /epics/support/pcas
+COPY start.sh get_ioc_ips.py /
 
 # ENTRYPOINT [ "bash" ]
