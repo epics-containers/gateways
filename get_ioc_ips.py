@@ -48,7 +48,7 @@ def main():
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--sep", type=int, default=" ")
+    parser.add_argument("--sep", type=str, default=" ")
     return parser.parse_args()
 
 

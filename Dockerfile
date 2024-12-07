@@ -8,9 +8,9 @@ RUN git clone --branch v4.13.3 --depth 1 -c advice.detachedHead=false \
       https://github.com/epics-modules/pcas.git /epics/support/pcas
 
 # hook up the dependencies
-COPY settings/* /
-RUN ln -s /configure/RELEASE.local /epics/support/pcas/configure && \
-    ln -s /configure/RELEASE.local /epics/src/ca-gateway/configure && \
+COPY settings/configure /configure
+RUN cp /configure/RELEASE.local /epics/support/pcas/configure && \
+    cp /configure/* /epics/src/ca-gateway/configure
 # build pcas and ca-gateway
 RUN cd /epics/support/pcas && make -j$(nproc)
 RUN cd /epics/src/ca-gateway && make -j$(nproc)
@@ -24,9 +24,8 @@ RUN apt update && \
     net-tools tcpdump iproute2 iputils-ping vim && \
     rm -rf /var/lib/apt/lists/*
 
+COPY settings/config /config
 COPY start.sh get_ioc_ips.py /
-
-
 
 ENTRYPOINT [ "bash" ]
 
