@@ -13,9 +13,6 @@ export PVA_SERVER_PORT=${PVA_SERVER_PORT:-5075}
 CA_DEBUG=${CA_DEBUG:-0}
 PVA_DEBUG=${PVA_DEBUG:-0}
 
-# background the CA Gateway
-/epics/ca-gateway/bin/linux-x86_64/gateway -sport ${CA_SERVER_PORT} -cip "${EPICS_CA_ADDR_LIST}" -pvlist /config/pvlist -access /config/access -log /dev/stdout -debug ${CA_DEBUG:-0} &>/tmp/cagw.log &
-
 # fix up the templated pva gateway config
 cat /config/pvagw.template |
   sed \
@@ -24,7 +21,4 @@ cat /config/pvagw.template |
     > /config/pvagw.config
 
 # background the PVA Gateway
-pvagw /config/pvagw.config &>/tmp/pvagw.log &
-
-# Start an interactive shell for debugging
-bash
+pvagw /config/pvagw.config
