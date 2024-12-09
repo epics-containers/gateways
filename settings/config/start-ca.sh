@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # IP lists for IOCS (blank if get_ioc_ips.py fails)
-export IPS="$(python3 /get_ioc_ips.py)"
+export IPS="$(python3 /config/get_ioc_ips.py)"
 export EPICS_PVA_ADDR_LIST=${IPS:-127.0.0.1}
 export EPICS_CA_ADDR_LIST=${IPS:-127.0.0.1}
 
