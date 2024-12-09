@@ -18,7 +18,7 @@ cat /config/pvagw.template |
   sed \
     -e "s/PVA_ADDR_LIST/${EPICS_PVA_ADDR_LIST}/" \
     -e "s/PVA_SERVER_PORT/${PVA_SERVER_PORT}/" \
-    > /config/pvagw.config
+    > /tmp/pvagw.config
 
 # background the PVA Gateway
-pvagw /config/pvagw.config
+pvagw /tmp/pvagw.config
