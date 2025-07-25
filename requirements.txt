@@ -6,3 +6,4 @@ p4p==4.1.12
 nose2==0.15.1
 scapy
 kubernetes
+urllib3<2.4.0
