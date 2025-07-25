@@ -86,3 +86,38 @@ jobs:
         uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
         with:
           generate_release_notes: true
+
+  build-and-push-helm-charts:
+    name: publish helm charts to ghcr.io
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: install helm
+        uses: Azure/setup-helm@v3
+        with:
+          version: 3.17.4
+
+      - name: push the helm chart
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io/${{ github.repository_owner }} --username ${{ github.repository_owner }} --password-stdin
+
+          REGISTRY=oci://ghcr.io/epics-containers
+          set -x
+
+          if [ "${GITHUB_REF_TYPE}" == "tag" ] ; then
+            TAG=${GITHUB_REF_NAME}
+
+            cd $(realpath helm)
+            NAME=$(sed -n '/^name: */s///p' Chart.yaml)
+
+            helm package -u --app-version ${TAG} --version ${TAG} .
+            PACKAGE=${NAME}-${TAG}.tgz
+
+            helm push "$PACKAGE" $REGISTRY
+          else:
+            echo "Not a tag push, skipping helm chart publish"
+          fi
