@@ -41,7 +41,7 @@ RUN apt update && \
 COPY settings/config /config
 
 ##### runtime stage ##########################################################
-FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} as runtime
+FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} AS runtime
 
 # for compatibility with RHEL7 kernel
 ENV EVENT_NOEPOLL=1
