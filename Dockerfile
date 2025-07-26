@@ -19,8 +19,8 @@ RUN cd /epics/support/pcas && make -j$(nproc)
 RUN cd /epics/src/ca-gateway && make -j$(nproc)
 
 COPY requirements.txt /
-# uv can't install epics-core-libs yet so add pip via --seed
-RUN uv venv --python=python3 --seed /venv && \
+# uv can't install epics-core-libs yet so add pip
+RUN uv pip install pip && \
     pip install -r requirements.txt
 
 # install debugging tools
@@ -37,5 +37,6 @@ FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} as runtime
 COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
 COPY --from=developer /epics/support/pcas /epics/support/PCAS
+COPY --from=developer /python /python
 
 COPY settings/config /config
