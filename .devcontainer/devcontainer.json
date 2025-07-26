@@ -18,7 +18,11 @@
         // provides a name for epics-containers to use in bash prompt etc.
         "EC_PROJECT": "${localWorkspaceFolderBasename}",
         // fixes this error: Ansible could not initialize the preferred locale: unsupported locale setting
-        "LC_ALL": "C.UTF-8"
+        "LC_ALL": "C.UTF-8",
+        "EPICS_CA_AUTO_ADDR_LIST": "YES",
+        "EPICS_PVA_AUTO_ADDR_LIST": "YES",
+        "CA_SERVER_PORT": "9064",
+        "PVA_SERVER_PORT": "9075"
     },
     // outside of the container setup
     "initializeCommand": "bash .devcontainer/initializeCommand ${devcontainerId}",
