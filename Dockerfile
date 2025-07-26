@@ -1,5 +1,5 @@
 ###### developer stage #######################################################
-FROM ghcr.io/epics-containers/epics-base-developer:7.0.8ec2 AS developer
+FROM ghcr.io/epics-containers/epics-base-developer:7.0.8ec4b1 AS developer
 
 # get ca-gateway and pcas
 RUN git clone --branch R2-1-3-0 --depth 1 -c advice.detachedHead=false \
@@ -27,7 +27,7 @@ RUN apt update && \
 COPY settings/config /config
 
 ##### runtime stage ##########################################################
-FROM ghcr.io/epics-containers/epics-base-runtime:7.0.8ec2 as runtime
+FROM ghcr.io/epics-containers/epics-base-runtime:7.0.8ec4b1 as runtime
 
 COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
