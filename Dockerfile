@@ -4,6 +4,9 @@ ARG BASE=7.0.9ec4b2
 ###### developer stage #######################################################
 FROM ghcr.io/epics-containers/epics-base-developer:${BASE} AS developer
 
+# for event-lib compatibility with latest kernel
+ENV EVENT_NOEPOLL=1
+
 # get ca-gateway and pcas
 RUN git clone --branch R2-1-3-0 --depth 1 -c advice.detachedHead=false \
       https://github.com/epics-extensions/ca-gateway.git /epics/src/ca-gateway
@@ -33,6 +36,9 @@ COPY settings/config /config
 
 ##### runtime stage ##########################################################
 FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} as runtime
+
+# for event-lib compatibility with latest kernel
+ENV EVENT_NOEPOLL=1
 
 COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
