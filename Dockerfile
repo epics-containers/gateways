@@ -1,5 +1,8 @@
+
+ARG BASE=7.0.9ec4b2
+
 ###### developer stage #######################################################
-FROM ghcr.io/epics-containers/epics-base-developer:7.0.8ec2 AS developer
+FROM ghcr.io/epics-containers/epics-base-developer:${BASE} AS developer
 
 # get ca-gateway and pcas
 RUN git clone --branch R2-1-3-0 --depth 1 -c advice.detachedHead=false \
@@ -16,7 +19,9 @@ RUN cd /epics/support/pcas && make -j$(nproc)
 RUN cd /epics/src/ca-gateway && make -j$(nproc)
 
 COPY requirements.txt /
-RUN pip install -r requirements.txt
+# uv can't install epics-core-libs yet so add pip via --seed
+RUN uv venv --python=python3 --seed /venv && \
+    pip install -r requirements.txt
 
 # install debugging tools
 RUN apt update && \
@@ -27,15 +32,10 @@ RUN apt update && \
 COPY settings/config /config
 
 ##### runtime stage ##########################################################
-FROM ghcr.io/epics-containers/epics-base-runtime:7.0.8ec2 as runtime
+FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} as runtime
 
 COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
 COPY --from=developer /epics/support/pcas /epics/support/PCAS
-
-RUN apt update && \
-    apt install -y \
-    python3-distutils && \
-    rm -rf /var/lib/apt/lists/*
 
 COPY settings/config /config
