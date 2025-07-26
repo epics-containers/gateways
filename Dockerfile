@@ -10,6 +10,9 @@ ENV EPICS_PVA_AUTO_ADDR_LIST=YES
 ENV CA_SERVER_PORT=5064
 ENV PVA_SERVER_PORT=5075
 
+# for compatibility with RHEL7 kernel
+ENV EVENT_NOEPOLL=1
+
 # get ca-gateway and pcas
 RUN git clone --branch R2-1-3-0 --depth 1 -c advice.detachedHead=false \
       https://github.com/epics-extensions/ca-gateway.git /epics/src/ca-gateway
@@ -38,7 +41,10 @@ RUN apt update && \
 COPY settings/config /config
 
 ##### runtime stage ##########################################################
-FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} as runtime
+FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} AS runtime
+
+# for compatibility with RHEL7 kernel
+ENV EVENT_NOEPOLL=1
 
 COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
