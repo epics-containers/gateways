@@ -38,9 +38,4 @@ COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
 COPY --from=developer /epics/support/pcas /epics/support/PCAS
 
-RUN apt update && \
-    apt install -y \
-    python3-distutils && \
-    rm -rf /var/lib/apt/lists/*
-
 COPY settings/config /config
