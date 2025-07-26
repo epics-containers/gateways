@@ -4,8 +4,11 @@ ARG BASE=7.0.9ec4b2
 ###### developer stage #######################################################
 FROM ghcr.io/epics-containers/epics-base-developer:${BASE} AS developer
 
-# for event-lib compatibility with latest kernel
-ENV EVENT_NOEPOLL=1
+# provide some defaults for EPICS settings
+ENV EPICS_CA_AUTO_ADDR_LIST=YES
+ENV EPICS_PVA_AUTO_ADDR_LIST=YES
+ENV CA_SERVER_PORT=5064
+ENV PVA_SERVER_PORT=5075
 
 # get ca-gateway and pcas
 RUN git clone --branch R2-1-3-0 --depth 1 -c advice.detachedHead=false \
@@ -36,9 +39,6 @@ COPY settings/config /config
 
 ##### runtime stage ##########################################################
 FROM ghcr.io/epics-containers/epics-base-runtime:${BASE} as runtime
-
-# for event-lib compatibility with latest kernel
-ENV EVENT_NOEPOLL=1
 
 COPY --from=developer /venv /venv
 COPY --from=developer /epics/ca-gateway /epics/ca-gateway
